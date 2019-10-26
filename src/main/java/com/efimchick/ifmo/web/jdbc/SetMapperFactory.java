@@ -1,6 +1,7 @@
 package com.efimchick.ifmo.web.jdbc;
 
 import java.math.BigDecimal;
+
 import java.math.BigInteger;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -35,7 +36,6 @@ public class SetMapperFactory {
 
     private Employee getManagerOfEmployee(ResultSet resultSet) {
         Employee manager = null;
-
         try {
             Integer managerId = (Integer) resultSet.getObject("MANAGER");
             if (managerId == null)
