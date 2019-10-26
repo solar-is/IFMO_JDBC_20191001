@@ -27,7 +27,7 @@ public class SetMapperFactory {
                     ),
                     Position.valueOf(resultSet.getString("POSITION")),
                     LocalDate.parse(resultSet.getString("HIREDATE")),
-                    new BigDecimal(resultSet.getInt("salary")),
+                    new BigDecimal(resultSet.getInt("SALARY")),
                     manager
             );
         } catch (SQLException ignored) {}
