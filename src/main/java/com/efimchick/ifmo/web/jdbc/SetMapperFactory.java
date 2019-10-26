@@ -7,14 +7,13 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
 import com.efimchick.ifmo.web.jdbc.domain.Employee;
 import com.efimchick.ifmo.web.jdbc.domain.FullName;
 import com.efimchick.ifmo.web.jdbc.domain.Position;
 
 public class SetMapperFactory {
 
-    private Employee getRowEmployee(ResultSet resultSet) {
+    public Employee getRowEmployee(ResultSet resultSet) {
         Employee cur = null;
         try {
             Employee manager = getManagerOfEmployee(resultSet);
@@ -35,7 +34,7 @@ public class SetMapperFactory {
         return cur;
     }
 
-    private Employee getManagerOfEmployee(ResultSet resultSet) throws SQLException {
+    public Employee getManagerOfEmployee(ResultSet resultSet) throws SQLException {
         Integer managerId = (Integer) resultSet.getObject("MANAGER");
         if (managerId == null)
             return null;
@@ -51,6 +50,7 @@ public class SetMapperFactory {
         resultSet.absolute(initRowNumber);
         return manager;
     }
+    
     
 
     public SetMapper<Set<Employee>> employeesSetMapper() {
