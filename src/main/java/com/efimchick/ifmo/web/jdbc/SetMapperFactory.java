@@ -13,7 +13,7 @@ import com.efimchick.ifmo.web.jdbc.domain.Position;
 
 public class SetMapperFactory {
 
-    Employee getRowEmployee(ResultSet resultSet) {
+    private Employee getRowEmployee(ResultSet resultSet) {
         Employee cur = null;
         try {
             Employee manager = getManagerOfEmployee(resultSet);
@@ -33,20 +33,22 @@ public class SetMapperFactory {
         return cur;
     }
 
-    Employee getManagerOfEmployee(ResultSet resultSet) throws SQLException {
-        Integer managerId = (Integer) resultSet.getObject("MANAGER");
-        if (managerId == null)
-            return null;
-        int initRowNumber = resultSet.getRow();
+    private Employee getManagerOfEmployee(ResultSet resultSet) {
         Employee manager = null;
-        resultSet.beforeFirst();
-        while (resultSet.next()){
-            if (resultSet.getInt("ID") == managerId){
-                manager = getRowEmployee(resultSet);
-                break;
+        try {
+            Integer managerId = (Integer) resultSet.getObject("MANAGER");
+            if (managerId == null)
+                return null;
+            int initRowNumber = resultSet.getRow();
+            resultSet.beforeFirst();
+            while (resultSet.next()) {
+                if (resultSet.getInt("ID") == managerId) {
+                    manager = getRowEmployee(resultSet);
+                    break;
+                }
             }
-        }
-        resultSet.absolute(initRowNumber);
+            resultSet.absolute(initRowNumber);
+        } catch (SQLException ignored){}
         return manager;
     }
 
