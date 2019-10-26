@@ -31,6 +31,7 @@ public class SetMapperFactory {
                     manager
             );
         } catch (SQLException ignored) {}
+        
         return cur;
     }
 
@@ -50,6 +51,7 @@ public class SetMapperFactory {
         resultSet.absolute(initRowNumber);
         return manager;
     }
+    
 
     public SetMapper<Set<Employee>> employeesSetMapper() {
         return resultSet -> {
