@@ -35,6 +35,7 @@ public class SetMapperFactory {
 
     private Employee getManagerOfEmployee(ResultSet resultSet) {
         Employee manager = null;
+
         try {
             Integer managerId = (Integer) resultSet.getObject("MANAGER");
             if (managerId == null)
