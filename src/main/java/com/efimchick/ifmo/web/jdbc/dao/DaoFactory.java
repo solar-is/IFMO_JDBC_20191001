@@ -16,7 +16,18 @@ import java.util.*;
 
 public class DaoFactory {
 
-    private Employee employeesRowMapper(ResultSet resultSet) {
+    private static List<Employee> employees;
+    private static List<Department> departments;
+
+    static {
+        try {
+            employees = getAllEmployees();
+            departments = getAllDepartments();
+        } catch (SQLException ignored) {
+        }
+    }
+
+    private static Employee employeesRowMapper(ResultSet resultSet) {
         Employee cur = null;
         try {
             Object managerId = resultSet.getObject("MANAGER");
@@ -39,13 +50,13 @@ public class DaoFactory {
         return cur;
     }
 
-    private ResultSet getResultSetFromDB(String SQL) throws SQLException {
+    private static ResultSet getResultSetFromDB(String SQL) throws SQLException {
         ConnectionSource connectionSource = ConnectionSource.instance();
         Connection connection = connectionSource.createConnection();
         return connection.createStatement().executeQuery(SQL);
     }
 
-    private List<Employee> getAllEmployees() throws SQLException {
+    private static List<Employee> getAllEmployees() throws SQLException {
         ResultSet resultSetFromDB = getResultSetFromDB("SELECT * FROM EMPLOYEE");
         List<Employee> employees = new ArrayList<>();
         while (resultSetFromDB.next()) {
@@ -55,7 +66,7 @@ public class DaoFactory {
         return employees;
     }
 
-    private List<Department> getAllDepartments() throws SQLException {
+    private static List<Department> getAllDepartments() throws SQLException {
         ResultSet resultSetFromDB = getResultSetFromDB("SELECT * FROM DEPARTMENT");
         List<Department> departments = new ArrayList<>();
         while (resultSetFromDB.next()) {
@@ -69,26 +80,15 @@ public class DaoFactory {
         return departments;
     }
 
-    private List<Employee> employees;
-    private List<Department> departments;
-
-    {
-        try {
-            employees = getAllEmployees();
-            departments = getAllDepartments();
-        } catch (SQLException ignored) {
-        }
-    }
-
 
     private final EmployeeDao employeeDaoInstance = new EmployeeDao() {
         @Override
         public List<Employee> getByDepartment(Department department) {
             List<Employee> ans = new ArrayList<>();
             for (Employee e : employees) {
-                if (e.getDepartmentId() != null)
-                    if (e.getDepartmentId().equals(department.getId()))
-                        ans.add(e);
+
+                if (e.getDepartmentId() != null && e.getDepartmentId().equals(department.getId()))
+                    ans.add(e);
             }
             return ans;
         }
@@ -97,10 +97,9 @@ public class DaoFactory {
         public List<Employee> getByManager(Employee manager) {
             List<Employee> ans = new ArrayList<>();
             for (Employee e : employees)
-                if (e.getManagerId() != null)
-                    if (e.getManagerId().equals(manager.getId())) {
-                        ans.add(e);
-                    }
+                if (e.getManagerId() != null && e.getManagerId().equals(manager.getId())) {
+                    ans.add(e);
+                }
             return ans;
         }
 
