@@ -15,19 +15,16 @@ import com.efimchick.ifmo.web.jdbc.domain.Position;
 public class SetMapperFactory {
 
     public SetMapper<Set<Employee>> employeesSetMapper() {
-        return new SetMapper<Set<Employee>>() {
-            @Override
-            public Set<Employee> mapSet(ResultSet resultSet) {
-                Set<Employee> ans = new LinkedHashSet<>();
-                try {
-                    while (resultSet.next()) {
-                        Employee cur = getRowEmployee(resultSet);
-                        ans.add(cur);
-                    }
-                } catch (SQLException ignored) {
+        return resultSet -> {
+            Set<Employee> ans = new LinkedHashSet<>();
+            try {
+                while (resultSet.next()) {
+                    Employee cur = getRowEmployee(resultSet);
+                    ans.add(cur);
                 }
-                return ans;
+            } catch (SQLException ignored) {
             }
+            return ans;
         };
     }
 
