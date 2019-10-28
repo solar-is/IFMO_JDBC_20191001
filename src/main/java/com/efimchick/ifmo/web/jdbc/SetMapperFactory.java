@@ -15,7 +15,7 @@ import com.efimchick.ifmo.web.jdbc.domain.Position;
 public class SetMapperFactory {
 
     public SetMapper<Set<Employee>> employeesSetMapper() {
-        return resultSet -> {
+        /*return resultSet -> {
             Set<Employee> ans = new LinkedHashSet<>();
             try {
                 while (resultSet.next()) {
@@ -25,9 +25,11 @@ public class SetMapperFactory {
             } catch (SQLException ignored) {
             }
             return ans;
-        };
+        };*/
+        return null;
     }
 
+    /*
     private Employee getRowEmployee(ResultSet resultSet) throws SQLException {
         Employee manager = getManagerOfEmployee(resultSet);
         return new Employee(
@@ -59,5 +61,5 @@ public class SetMapperFactory {
         }
         resultSet.absolute(initRowNumber);
         return manager;
-    }
+    }*/
 }
