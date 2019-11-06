@@ -18,36 +18,12 @@ public class DaoFactory {
 
     private static List<Employee> employees;
     private static List<Department> departments;
-
     static {
         try {
             employees = getAllEmployees();
             departments = getAllDepartments();
         } catch (SQLException ignored) {
         }
-    }
-
-    private static Employee employeesRowMapper(ResultSet resultSet) {
-        Employee cur = null;
-        try {
-            Object managerId = resultSet.getObject("MANAGER");
-            Object departmentId = resultSet.getObject("DEPARTMENT");
-            cur = new Employee(
-                    new BigInteger(String.valueOf(resultSet.getInt("ID"))),
-                    new FullName(
-                            resultSet.getString("FIRSTNAME"),
-                            resultSet.getString("LASTNAME"),
-                            resultSet.getString("MIDDLENAME")
-                    ),
-                    Position.valueOf(resultSet.getString("POSITION")),
-                    LocalDate.parse(resultSet.getString("HIREDATE")),
-                    new BigDecimal(resultSet.getInt("SALARY")),
-                    managerId == null ? BigInteger.ZERO : BigInteger.valueOf((Integer) managerId),
-                    departmentId == null ? BigInteger.ZERO : BigInteger.valueOf((Integer) departmentId)
-            );
-        } catch (SQLException ignored) {
-        }
-        return cur;
     }
 
     private static ResultSet getResultSetFromDB(String SQL) throws SQLException {
@@ -80,91 +56,108 @@ public class DaoFactory {
         return departments;
     }
 
-
-    private final EmployeeDao employeeDaoInstance = new EmployeeDao() {
-        @Override
-        public List<Employee> getByDepartment(Department department) {
-            List<Employee> ans = new ArrayList<>();
-            for (Employee e : employees) {
-
-                if (e.getDepartmentId() != null && e.getDepartmentId().equals(department.getId()))
-                    ans.add(e);
-            }
-            return ans;
+    private static Employee employeesRowMapper(ResultSet resultSet) {
+        Employee cur = null;
+        try {
+            Object managerId = resultSet.getObject("MANAGER");
+            Object departmentId = resultSet.getObject("DEPARTMENT");
+            cur = new Employee(
+                    new BigInteger(String.valueOf(resultSet.getInt("ID"))),
+                    new FullName(
+                            resultSet.getString("FIRSTNAME"),
+                            resultSet.getString("LASTNAME"),
+                            resultSet.getString("MIDDLENAME")
+                    ),
+                    Position.valueOf(resultSet.getString("POSITION")),
+                    LocalDate.parse(resultSet.getString("HIREDATE")),
+                    new BigDecimal(resultSet.getInt("SALARY")),
+                    managerId == null ? BigInteger.ZERO : BigInteger.valueOf((Integer) managerId),
+                    departmentId == null ? BigInteger.ZERO : BigInteger.valueOf((Integer) departmentId)
+            );
+        } catch (SQLException ignored) {
         }
-
-        @Override
-        public List<Employee> getByManager(Employee manager) {
-            List<Employee> ans = new ArrayList<>();
-            for (Employee e : employees)
-                if (e.getManagerId() != null && e.getManagerId().equals(manager.getId())) {
-                    ans.add(e);
-                }
-            return ans;
-        }
-
-        @Override
-        public Optional<Employee> getById(BigInteger Id) {
-            for (Employee e : employees) {
-                if (e.getId().equals(Id)) {
-                    return Optional.of(e);
-                }
-            }
-            return Optional.empty();
-        }
-
-        @Override
-        public List<Employee> getAll() {
-            return employees;
-        }
-
-
-        @Override
-        public Employee save(Employee employee) {
-            employees.add(employee);
-            return employee;
-        }
-
-        @Override
-        public void delete(Employee employee) {
-            employees.remove(employee);
-        }
-    };
-
-    private final DepartmentDao departmentDaoInstance = new DepartmentDao() {
-        @Override
-        public Optional<Department> getById(BigInteger Id) {
-            for (Department d : departments) {
-                if (d.getId().equals(Id)) {
-                    return Optional.of(d);
-                }
-            }
-            return Optional.empty();
-        }
-
-        @Override
-        public List<Department> getAll() {
-            return departments;
-        }
-
-        @Override
-        public Department save(Department department) {
-            departments.removeIf(next -> next.getId().equals(department.getId()));
-            departments.add(department);
-            return department;
-        }
-
-        @Override
-        public void delete(Department department) {
-            departments.remove(department);
-        }
-    };
+        return cur;
+    }
 
     public EmployeeDao employeeDAO() {
-        return employeeDaoInstance;
+        return new EmployeeDao() {
+            @Override
+            public List<Employee> getByDepartment(Department department) {
+                List<Employee> ans = new ArrayList<>();
+                for (Employee e : employees) {
+                    if (e.getDepartmentId() != null && e.getDepartmentId().equals(department.getId()))
+                        ans.add(e);
+                }
+                return ans;
+            }
+
+            @Override
+            public List<Employee> getByManager(Employee manager) {
+                List<Employee> ans = new ArrayList<>();
+                for (Employee e : employees)
+                    if (e.getManagerId() != null && e.getManagerId().equals(manager.getId())) {
+                        ans.add(e);
+                    }
+                return ans;
+            }
+
+            @Override
+            public Optional<Employee> getById(BigInteger Id) {
+                for (Employee e : employees) {
+                    if (e.getId().equals(Id)) {
+                        return Optional.of(e);
+                    }
+                }
+                return Optional.empty();
+            }
+
+            @Override
+            public List<Employee> getAll() {
+                return employees;
+            }
+
+
+            @Override
+            public Employee save(Employee employee) {
+                employees.add(employee);
+                return employee;
+            }
+
+            @Override
+            public void delete(Employee employee) {
+                employees.remove(employee);
+            }
+        };
     }
 
     public DepartmentDao departmentDAO() {
-        return departmentDaoInstance;
+        return new DepartmentDao() {
+            @Override
+            public Optional<Department> getById(BigInteger Id) {
+                for (Department d : departments) {
+                    if (d.getId().equals(Id)) {
+                        return Optional.of(d);
+                    }
+                }
+                return Optional.empty();
+            }
+
+            @Override
+            public List<Department> getAll() {
+                return departments;
+            }
+
+            @Override
+            public Department save(Department department) {
+                departments.removeIf(next -> next.getId().equals(department.getId()));
+                departments.add(department);
+                return department;
+            }
+
+            @Override
+            public void delete(Department department) {
+                departments.remove(department);
+            }
+        };
     }
 }
