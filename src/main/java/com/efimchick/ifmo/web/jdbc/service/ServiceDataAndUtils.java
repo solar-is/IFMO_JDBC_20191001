@@ -61,7 +61,7 @@ class ServiceDataAndUtils {
         try {
             Integer departmentId = (Integer) resultSet.getObject("DEPARTMENT");
             Integer managerId = (Integer) resultSet.getObject("MANAGER");
-            if (!isFirst & !continueChain) {
+            if (!isFirst && !continueChain) {
                 managerId = null;
             }
             employee = new Employee(
