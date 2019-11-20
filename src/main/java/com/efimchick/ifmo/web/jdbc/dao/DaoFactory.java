@@ -179,7 +179,8 @@ public class DaoFactory {
                     } else {
                         return Optional.of(getDepartmentListByResultSet(res).get(0));
                     }
-                } catch (SQLException e) {
+                }
+                catch (SQLException e) {
                     e.printStackTrace();
                     return Optional.empty();
                 }
