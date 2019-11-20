@@ -9,7 +9,6 @@ import com.efimchick.ifmo.web.jdbc.domain.Position;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.*;
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
 
