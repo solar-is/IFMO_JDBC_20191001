@@ -220,9 +220,9 @@ public class DaoFactory {
                     return department;
                 } catch (SQLException e) {
                     e.printStackTrace();
+
                     return null;
                 }
-
             }
 
             @Override
